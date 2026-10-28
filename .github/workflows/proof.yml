@@ -1,0 +1,29 @@
+name: proof
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  hold:
+    name: hold (stands for a long run)
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 100
+  bounded:
+    name: bounded (timeout 1 minute, sleeps 150 s)
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: sleep 150
+  control:
+    name: control (timeout 1 minute, sleeps 20 s)
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: sleep 20
